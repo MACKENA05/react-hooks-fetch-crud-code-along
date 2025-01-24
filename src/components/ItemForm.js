@@ -1,11 +1,33 @@
 import React, { useState } from "react";
 
-function ItemForm() {
+function ItemForm({onAddItem}) {
   const [name, setName] = useState("");
   const [category, setCategory] = useState("Produce");
 
+  function handleSubmit(e){
+    e.preventDefault();
+    // const ItemData = {
+    //   name,
+    //   category,
+    //   isInCart: false
+    // }
+    // console.log(ItemData);
+
+    // Add item to the database
+    fetch('http://localhost:4000/items', {
+      method: 'POST',
+      headers: {
+        'content-type' : 'application/json',
+        'Accept' : 'application/json'
+      },
+      body: JSON.stringify({name,category, isInCart: false})
+    })
+    .then((response) => response.json())
+    .then((newItem)=> onAddItem(newItem))
+  }
+
   return (
-    <form className="NewItem">
+    <form className="NewItem" onSubmit={handleSubmit}>
       <label>
         Name:
         <input
